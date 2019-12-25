@@ -6,6 +6,15 @@ __pycache__/
 *$py.class
 
 .idea/
+data/
+tables/
+csv_templates
+
+test.py
+trash.py
+
+*.xlsx
+*.xls
 
 # C extensions
 *.so

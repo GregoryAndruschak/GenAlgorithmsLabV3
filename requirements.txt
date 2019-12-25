@@ -1,0 +1,6 @@
+Flask
+openpyxl
+pandas
+matplotlib
+pillow
+XlsxWriter
