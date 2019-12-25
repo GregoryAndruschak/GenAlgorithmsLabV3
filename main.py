@@ -287,7 +287,7 @@ if __name__ == '__main__':
 
         """
 
-        print(pages)
+        print(pages.format(ip, port))
 
         t1 = threading.Thread(target=app.run, args=(ip, port))
         t1.start()
