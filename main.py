@@ -280,8 +280,9 @@ def add_to_queue():
         'mk_gif': make_gif,
         'mk_xlsx': TableRow.make_csv_from_all_data
     }
-    query = dict(request.args)
-    if len(query) == 0:
+    if request.method == 'GET':
+        query = dict(request.args)
+    elif request.method == 'POST':
         query = dict(json.loads(request.get_json()))
     try:
         if query.get('NAME') in names.keys():
