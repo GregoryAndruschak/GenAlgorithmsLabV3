@@ -203,6 +203,7 @@ def draw_hist(query):
         if not os.path.exists('data/{}/{}/histograms/'.format(path_name, j.get('run'))):
             os.mkdir('data/{}/{}/histograms/'.format(path_name, j.get('run')))
 
+        plt.switch_backend('Agg')
         plt.style.use('bmh')
 
         if not os.path.exists('data/{}/{}/histograms/pair_dist'.format(path_name, j.get('run'))):
@@ -279,6 +280,8 @@ def add_to_queue():
         'mk_xlsx': TableRow.make_csv_from_all_data
     }
     query = dict(request.args)
+    if len(query) == 0:
+        query = dict(json.loads(request.get_json()))
     try:
         if query.get('NAME') in names.keys():
             new_query = Query(names.get(query.get('NAME')), data=query)
