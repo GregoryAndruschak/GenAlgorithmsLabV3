@@ -8,6 +8,7 @@ from PIL import Image
 import os
 import matplotlib.pyplot as plt
 import xlsxwriter
+import json
 
 app = Flask(__name__)
 
@@ -18,9 +19,9 @@ list_of_data = []
 satisfied_queries, num_of_errors = 0, 0
 
 class Query(object):
-    def __init__(self, func, traceback=None, **kwargs):
+    def __init__(self, func, traceback=None, data=dict()):
         self.func = func
-        self.kwargs = kwargs
+        self.kwargs = data
         self.traceback = traceback
 
     def __repr__(self):
@@ -140,8 +141,10 @@ class TableRow(object):
 
 
             workbook.close()
+            return True
         except Exception as exc:
             query.traceback = ''.join(trcbck.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__))
+            return False
 
 
 
@@ -164,9 +167,11 @@ def process_query():
             # print('Queue is empty')
 
 
-def make_obj(query):    
+def make_obj(query):
+    global list_of_data
     try:
         j = query.kwargs
+
         if j.get('NAME') == 'a':
             j.update({'run': '6'})
             list_of_data.append(TableRow.from_json(j))
@@ -175,8 +180,10 @@ def make_obj(query):
             list_of_data.append(TableRow.from_json(j))
         else:
             list_of_data.append(TableRow.from_json(j))
+        return True
     except Exception as exc:
         query.traceback = ''.join(trcbck.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__))
+        return False
 
     
 
@@ -217,8 +224,11 @@ def draw_hist(query):
         plt.bar([int(x) for x in j.get('crazy').keys()], [int(x) for x in j.get('crazy').values()], color='indianred')
         plt.savefig('data/{}/histograms/crazy/{}.png'.format(path_name, j.get('num_of_iter')))
         plt.clf()
+
+        return True
     except Exception as exc:
         query.traceback = ''.join(trcbck.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__))
+        return False
 
 
 def make_gif(query):
@@ -232,8 +242,10 @@ def make_gif(query):
             if not os.path.exists('data/{}/gifs/'.format(directory_name)):
                 os.mkdir('data/{}/gifs/'.format(directory_name))
             images[0].save('data/{}/gifs/{}.gif'.format(directory_name, t), format='GIF', append_images=images[1:], save_all=True, duration=300, loop=0)
+            return True
     except Exception as exc:
         query.traceback = ''.join(trcbck.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__))
+        return False
 
 
 @app.route('/info')
@@ -253,7 +265,7 @@ def index_page():
 
 
 @app.route('/add_to_queue', methods=['POST', 'GET'])
-def add_to_queue(a_u=None):
+def add_to_queue():
     names = {
         'c': make_obj,
         'h': draw_hist,
@@ -262,10 +274,10 @@ def add_to_queue(a_u=None):
         'mk_gif': make_gif,
         'mk_xlsx': TableRow.make_csv_from_all_data
     }
-    query = request.args
+    query = dict(request.args)
     try:
         if query.get('NAME') in names.keys():
-            new_query = Query(names.get(query.get('NAME')), query)
+            new_query = Query(names.get(query.get('NAME')), data=query)
             q.append(new_query)
         else:
             print('ADD_TO_QUEUE: NAME arg not found!', str(query))       
@@ -281,13 +293,13 @@ if __name__ == '__main__':
         ip, port = '127.0.0.1', 8080
 
         pages = """
-        Index:          {ip}:{port}/
-        Queue of tasks: {ip}:{port}/queue
-        Errors:         {ip}:{port}/errors
+        Index:          http://{ip}:{port}/
+        Queue of tasks: http://{ip}:{port}/queue
+        Errors:         http://{ip}:{port}/info
 
         """
 
-        print(pages.format(ip, port))
+        print(pages.format(ip=ip, port=port))
 
         t1 = threading.Thread(target=app.run, args=(ip, port))
         t1.start()
