@@ -196,33 +196,35 @@ def draw_hist(query):
             os.mkdir('data/')
         if not os.path.exists('data/{}/'.format(path_name)):
             os.mkdir('data/{}/'.format(path_name))
-        if not os.path.exists('data/{}/histograms'.format(path_name)):
-            os.mkdir('data/{}/histograms'.format(path_name))
+        if not os.path.exists('data/{}/{}/'.format(path_name, j.get('run'))):
+            os.mkdir('data/{}/{}/'.format(path_name, j.get('run')))
+        if not os.path.exists('data/{}/{}/histograms/'.format(path_name, j.get('run'))):
+            os.mkdir('data/{}/{}/histograms/'.format(path_name, j.get('run')))
 
         plt.style.use('bmh')
 
-        if not os.path.exists('data/{}/histograms/pair_dist'.format(path_name)):
-            os.mkdir('data/{}/histograms/pair_dist'.format(path_name))
+        if not os.path.exists('data/{}/{}/histograms/pair_dist'.format(path_name, j.get('run'))):
+            os.mkdir('data/{}/{}/histograms/pair_dist'.format(path_name, j.get('run')))
         plt.title('Iteration: {}'.format(j.get('num_of_iter')))
         plt.xlabel(path_name + '_pair_dist')
         plt.bar([int(x) for x in j.get('pair_dist').keys()], [int(x) for x in j.get('pair_dist').values()], color='palevioletred')
-        plt.savefig('data/{}/histograms/pair_dist/{}.png'.format(path_name, j.get('num_of_iter')))
+        plt.savefig('data/{}/{}/histograms/pair_dist/{}.png'.format(path_name, j.get('run'), j.get('num_of_iter')))
         plt.clf()
 
-        if not os.path.exists('data/{}/histograms/hem_dist'.format(path_name)):
-            os.mkdir('data/{}/histograms/hem_dist'.format(path_name))
+        if not os.path.exists('data/{}/{}/histograms/hem_dist'.format(path_name, j.get('run'))):
+            os.mkdir('data/{}/{}/histograms/hem_dist'.format(path_name, j.get('run')))
         plt.title('Iteration: {}'.format(j.get('num_of_iter')))
         plt.xlabel(path_name + '_hem_dist')
         plt.bar([int(x) for x in j.get('hem_dist').keys()], [int(x) for x in j.get('hem_dist').values()], color='cornflowerblue')
-        plt.savefig('data/{}/histograms/hem_dist/{}.png'.format(path_name, j.get('num_of_iter')))
+        plt.savefig('data/{}/{}/histograms/hem_dist/{}.png'.format(path_name, j.get('run'), j.get('num_of_iter')))
         plt.clf()
 
-        if not os.path.exists('data/{}/histograms/crazy'.format(path_name)):
-            os.mkdir('data/{}/histograms/crazy'.format(path_name))
+        if not os.path.exists('data/{}/{}/histograms/crazy'.format(path_name, j.get('run'))):
+            os.mkdir('data/{}/{}/histograms/crazy'.format(path_name, j.get('run')))
         plt.title('Iteration: {}'.format(j.get('num_of_iter')))
         plt.xlabel(path_name + '_crazy')
         plt.bar([int(x) for x in j.get('crazy').keys()], [int(x) for x in j.get('crazy').values()], color='indianred')
-        plt.savefig('data/{}/histograms/crazy/{}.png'.format(path_name, j.get('num_of_iter')))
+        plt.savefig('data/{}/{}/histograms/crazy/{}.png'.format(path_name, j.get('run'), j.get('num_of_iter')))
         plt.clf()
 
         return True
@@ -237,11 +239,11 @@ def make_gif(query):
         directory_name = 'L={}_N={}_TOS={}_M={}_TOI={}'.format(j.get('L'), j.get('N'), j.get('type_of_selection'), j.get('mutation'), j.get('type_of_init'))
         type = ['pair_dist', 'hem_dist', 'crazy']
         for t in type:
-            file_names = sorted((int(fn[:-4]) for fn in os.listdir('data/{}/histograms/{}'.format(directory_name, t)) if fn.endswith('.png')))
-            images = [Image.open('data/{}/histograms/{}/{}.png'.format(directory_name, t, fn)) for fn in file_names]
-            if not os.path.exists('data/{}/gifs/'.format(directory_name)):
-                os.mkdir('data/{}/gifs/'.format(directory_name))
-            images[0].save('data/{}/gifs/{}.gif'.format(directory_name, t), format='GIF', append_images=images[1:], save_all=True, duration=300, loop=0)
+            file_names = sorted((int(fn[:-4]) for fn in os.listdir('data/{}/{}/histograms/{}'.format(directory_name, j.get('run'), t)) if fn.endswith('.png')))
+            images = [Image.open('data/{}/{}/histograms/{}/{}.png'.format(directory_name, j.get('run'),t, fn)) for fn in file_names]
+            if not os.path.exists('data/{}/{}/gifs/'.format(directory_name, j.get('run'))):
+                os.mkdir('data/{}/{}/gifs/'.format(directory_name, j.get('run')))
+            images[0].save('data/{}/{}/gifs/{}.gif'.format(directory_name, j.get('run'), t), format='GIF', append_images=images[1:], save_all=True, duration=300, loop=0)
             return True
     except Exception as exc:
         query.traceback = ''.join(trcbck.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__))
