@@ -8,10 +8,10 @@
 <body>
 <div class="row">
     <div class="container col-sm">
-        <h3>Queue of queries:</h3>
+        <h3>List of complete:</h3>
         <ul>
-            {% if queue %}
-                {% for element in queue %}
+            {% if los %}
+                {% for element in los %}
                     <li>{{ element.__repr__ }}</li>
                 {% endfor %}
             {% else %}

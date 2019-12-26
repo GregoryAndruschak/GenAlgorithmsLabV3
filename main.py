@@ -12,9 +12,10 @@ import json
 
 app = Flask(__name__)
 
-global q, satisfied_queries, list_of_errors, num_of_errors, list_of_data
+global q, satisfied_queries, list_of_errors, num_of_errors, list_of_data, list_of_satisfied
 q = deque()
 list_of_errors = []
+list_of_satisfied = []
 list_of_data = []
 satisfied_queries, num_of_errors = 0, 0
 
@@ -25,7 +26,7 @@ class Query(object):
         self.traceback = traceback
 
     def __repr__(self):
-        return self.func.__name__ + ' | ' + str(self.kwargs)
+        return str(self.func.__name__) + ' | ' + str(self.kwargs)
 
 
 class TableRow(object):
@@ -150,7 +151,7 @@ class TableRow(object):
 
 
 def process_query():
-    global satisfied_queries, list_of_errors, num_of_errors, q
+    global satisfied_queries, list_of_errors, num_of_errors, q, list_of_satisfied
     while True:
         try:
             # time.sleep(1)
@@ -158,6 +159,7 @@ def process_query():
             res = query.func(query)
             # print(res)
             if res:
+                list_of_satisfied.append(query)
                 satisfied_queries += 1
             else:
                 list_of_errors.append(query)
@@ -263,7 +265,7 @@ def queue_page():
 
 @app.route('/')
 def index_page():
-    return render_template('queue.html', queue=q)
+    return render_template('index.html', los=list_of_satisfied)
 
 
 @app.route('/add_to_queue', methods=['POST', 'GET'])
