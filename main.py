@@ -244,9 +244,10 @@ def make_gif(query):
         for t in type:
             file_names = sorted((int(fn[:-4]) for fn in os.listdir('data/{}/{}/histograms/{}'.format(directory_name, j.get('run'), t)) if fn.endswith('.png')))
             images = [Image.open('data/{}/{}/histograms/{}/{}.png'.format(directory_name, j.get('run'),t, fn)) for fn in file_names]
+            duration = 10000/len(images) 
             if not os.path.exists('data/{}/{}/gifs/'.format(directory_name, j.get('run'))):
                 os.mkdir('data/{}/{}/gifs/'.format(directory_name, j.get('run')))
-            images[0].save('data/{}/{}/gifs/{}.gif'.format(directory_name, j.get('run'), t), format='GIF', append_images=images[1:], save_all=True, duration=300, loop=0)
+            images[0].save('data/{}/{}/gifs/{}.gif'.format(directory_name, j.get('run'), t), format='GIF', append_images=images[1:], save_all=True, duration=duration, loop=0)
             return True
     except Exception as exc:
         query.traceback = ''.join(trcbck.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__))
