@@ -248,7 +248,7 @@ def make_gif(query):
             if not os.path.exists('data/{}/{}/gifs/'.format(directory_name, j.get('run'))):
                 os.mkdir('data/{}/{}/gifs/'.format(directory_name, j.get('run')))
             images[0].save('data/{}/{}/gifs/{}.gif'.format(directory_name, j.get('run'), t), format='GIF', append_images=images[1:], save_all=True, duration=duration, loop=0)
-            return True
+        return True
     except Exception as exc:
         query.traceback = ''.join(trcbck.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__))
         return False
