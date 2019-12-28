@@ -239,7 +239,7 @@ def draw_hist(query):
 def make_gif(query):
     try:
         j = query.kwargs
-        directory_name = 'L={}_N={}_TOS={}_M={}_TOI={}'.format(j.get('L'), j.get('N'), j.get('type_of_selection'), j.get('mutation'), j.get('type_of_init'))
+        directory_name = 'L={}_N={}_TOS={}_M={}_TOI={}_PGP={}'.format(j.get('L'), j.get('N'), j.get('type_of_selection'), j.get('mutation'), j.get('type_of_init'), j.get('pol_genes_perc'))
         type = ['Попарні_відстані', 'Відстані_Геммінга', 'Дикий_тип']
         for t in type:
             file_names = sorted((int(fn[:-4]) for fn in os.listdir('data/{}/{}/histograms/{}'.format(directory_name, j.get('run'), t)) if fn.endswith('.png')))
@@ -283,7 +283,7 @@ def add_to_queue():
     if request.method == 'GET':
         query = dict(request.args)
     elif request.method == 'POST':
-        query = dict(json.loads(request.get_json()))
+        query = dict(request.get_json())
     try:
         if query.get('NAME') in names.keys():
             new_query = Query(names.get(query.get('NAME')), data=query)
