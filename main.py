@@ -128,9 +128,10 @@ class TableRow(object):
                         for jtem in iter(item_list):
                             worksheet.write(row, col, jtem)
                             col += 1
-                    if i == 6:
+                    elif i == 6:
                         for jtem in iter(item_list[5:]):
                             worksheet.write(row, col, jtem)
+                            col += 1
                         worksheet.write(row, col, item.suc_runs)
                         col = 0
                         row += 1
