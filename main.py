@@ -122,7 +122,7 @@ class TableRow(object):
             row, col = 2, 0
 
             for start_type in iter(sorted_by_shit):
-                for i, item in enumerate(start_type):
+                for i, item in zip(range(len(start_type)), sorted(start_type, key=lambda x: int(x.run))):
                     item_list = item.to_list()
                     if i == 0:
                         for jtem in iter(item_list):
