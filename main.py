@@ -193,7 +193,7 @@ def make_obj(query):
 def draw_hist(query):
     try:
         j = query.kwargs
-        path_name = 'L={}_N={}_TOS={}_M={}_TOI={}'.format(j.get('L'), j.get('N'), j.get('type_of_selection'), j.get('mutation'), j.get('type_of_init'))
+        path_name = 'L={}_N={}_TOS={}_M={}_TOI={}_PGP={}'.format(j.get('L'), j.get('N'), j.get('type_of_selection'), j.get('mutation'), j.get('type_of_init'), j.get('pol_genes_perc'))
         if not os.path.exists('data/'):
             os.mkdir('data/')
         if not os.path.exists('data/{}/'.format(path_name)):
@@ -206,28 +206,28 @@ def draw_hist(query):
         plt.switch_backend('Agg')
         plt.style.use('bmh')
 
-        if not os.path.exists('data/{}/{}/histograms/pair_dist'.format(path_name, j.get('run'))):
-            os.mkdir('data/{}/{}/histograms/pair_dist'.format(path_name, j.get('run')))
-        plt.title('Iteration: {}'.format(j.get('num_of_iter')))
-        plt.xlabel(path_name + '_pair_dist')
+        if not os.path.exists('data/{}/{}/histograms/Попарні_відстані'.format(path_name, j.get('run'))):
+            os.mkdir('data/{}/{}/histograms/Попарні_відстані'.format(path_name, j.get('run')))
+        plt.title('Попарні відстані, Iteration: {}'.format(j.get('num_of_iter')))
+        plt.xlabel(path_name)
         plt.bar([int(x) for x in j.get('pair_dist').keys()], [int(x) for x in j.get('pair_dist').values()], color='palevioletred')
-        plt.savefig('data/{}/{}/histograms/pair_dist/{}.png'.format(path_name, j.get('run'), j.get('num_of_iter')))
+        plt.savefig('data/{}/{}/histograms/Попарні_відстані/{}.png'.format(path_name, j.get('run'), j.get('num_of_iter')))
         plt.clf()
 
-        if not os.path.exists('data/{}/{}/histograms/hem_dist'.format(path_name, j.get('run'))):
-            os.mkdir('data/{}/{}/histograms/hem_dist'.format(path_name, j.get('run')))
-        plt.title('Iteration: {}'.format(j.get('num_of_iter')))
-        plt.xlabel(path_name + '_hem_dist')
+        if not os.path.exists('data/{}/{}/histograms/Відстані_Геммінга'.format(path_name, j.get('run'))):
+            os.mkdir('data/{}/{}/histograms/Відстані_Геммінга'.format(path_name, j.get('run')))
+        plt.title('Відстані Геммінга, Iteration: {}'.format(j.get('num_of_iter')))
+        plt.xlabel(path_name)
         plt.bar([int(x) for x in j.get('hem_dist').keys()], [int(x) for x in j.get('hem_dist').values()], color='cornflowerblue')
-        plt.savefig('data/{}/{}/histograms/hem_dist/{}.png'.format(path_name, j.get('run'), j.get('num_of_iter')))
+        plt.savefig('data/{}/{}/histograms/Відстані_Геммінга/{}.png'.format(path_name, j.get('run'), j.get('num_of_iter')))
         plt.clf()
 
-        if not os.path.exists('data/{}/{}/histograms/crazy'.format(path_name, j.get('run'))):
-            os.mkdir('data/{}/{}/histograms/crazy'.format(path_name, j.get('run')))
-        plt.title('Iteration: {}'.format(j.get('num_of_iter')))
-        plt.xlabel(path_name + '_crazy')
+        if not os.path.exists('data/{}/{}/histograms/Дикий_тип'.format(path_name, j.get('run'))):
+            os.mkdir('data/{}/{}/histograms/Дикий_тип'.format(path_name, j.get('run')))
+        plt.title('Дикий тип, Iteration: {}'.format(j.get('num_of_iter')))
+        plt.xlabel(path_name)
         plt.bar([int(x) for x in j.get('crazy').keys()], [int(x) for x in j.get('crazy').values()], color='indianred')
-        plt.savefig('data/{}/{}/histograms/crazy/{}.png'.format(path_name, j.get('run'), j.get('num_of_iter')))
+        plt.savefig('data/{}/{}/histograms/Дикий_тип/{}.png'.format(path_name, j.get('run'), j.get('num_of_iter')))
         plt.clf()
 
         return True
@@ -240,7 +240,7 @@ def make_gif(query):
     try:
         j = query.kwargs
         directory_name = 'L={}_N={}_TOS={}_M={}_TOI={}'.format(j.get('L'), j.get('N'), j.get('type_of_selection'), j.get('mutation'), j.get('type_of_init'))
-        type = ['pair_dist', 'hem_dist', 'crazy']
+        type = ['Попарні_відстані', 'Відстані_Геммінга', 'Дикий_тип']
         for t in type:
             file_names = sorted((int(fn[:-4]) for fn in os.listdir('data/{}/{}/histograms/{}'.format(directory_name, j.get('run'), t)) if fn.endswith('.png')))
             images = [Image.open('data/{}/{}/histograms/{}/{}.png'.format(directory_name, j.get('run'),t, fn)) for fn in file_names]

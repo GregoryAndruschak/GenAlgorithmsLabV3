@@ -13,6 +13,8 @@ csv_templates
 test.py
 trash.py
 
+examples.json
+
 *.xlsx
 *.xls
 
