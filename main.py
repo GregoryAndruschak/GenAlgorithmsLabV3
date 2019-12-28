@@ -35,7 +35,7 @@ class TableRow(object):
 
     def __init__(self, run, L, N, TOS, M, TOI, n_o_i, p_g_p, a_c_f, t_c_f, a_c_v, t_c_v, suc_runs=None):
         TableRow.amount += 1
-        self.run = str(run)
+        self.run = int(run)
         self.L = str(L)
         self.N = str(N)
         self.TOS = str(TOS)
@@ -173,15 +173,7 @@ def make_obj(query):
     global list_of_data
     try:
         j = query.kwargs
-
-        if j.get('NAME') == 'a':
-            j.update({'run': '6'})
-            list_of_data.append(TableRow.from_json(j))
-        elif j.get('NAME') == 't':
-            j.update({'run': '7'})
-            list_of_data.append(TableRow.from_json(j))
-        else:
-            list_of_data.append(TableRow.from_json(j))
+        list_of_data.append(TableRow.from_json(j))
         return True
     except Exception as exc:
         query.traceback = ''.join(trcbck.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__))
